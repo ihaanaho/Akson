@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    namespace = "himmelihommelit.axon"
+    namespace = "himmelihommelit.akson"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "himmelihommelit.axon"
+        applicationId = "himmelihommelit.akson"
         minSdk = 29
         targetSdk = 33
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
