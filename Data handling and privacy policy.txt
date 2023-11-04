@@ -1,0 +1,4 @@
+This application does not transfer any user data outside the application. This application does not need to store any other data in the foreseeable future except the following items:
+- camera MAC address (for identifying multiple cameras, if the multicamera feature is ever developed)
+- user-defined name for each camera (for naming different cameras, if the multicamera feature is ever developed)
+- user's application preferences (e.g., widget orientation and position).
