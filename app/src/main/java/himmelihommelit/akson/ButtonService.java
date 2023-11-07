@@ -221,12 +221,6 @@ public class ButtonService extends Service implements View.OnClickListener, View
                 bat.setText(batteryLevel + " %");
                 TextView sd = (TextView) mWidgetView.findViewById(R.id.sdCardRemaining);
                 sd.setText(bluetoothService.sdCardRemaining);
-                // fix state if we start the app while the camera is recording
-                if(!recording && rec.getText() != "")
-                {
-                    recording = true;
-                    button.setImageResource(R.drawable.button_red);
-                }
                 if(batteryLevel > previousBatteryLevel)
                 {
                     batteryDraining = false;

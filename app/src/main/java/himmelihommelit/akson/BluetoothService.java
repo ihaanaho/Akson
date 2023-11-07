@@ -27,6 +27,9 @@ public class BluetoothService extends Service
     public BluetoothGatt bluetoothGatt = null;
     public final static String CAMERA_CONNECTED =
             "akson.CAMERA_CONNECTED";
+
+    public final static String CAMERA_CONNECTED_RECORDING =
+            "akson.CAMERA_CONNECTED_RECORDING";
     public final static String CAMERA_DISCONNECTED =
             "akson.CAMERA_DISCONNECTED";
     public final static String DATA_AVAILABLE =
@@ -43,22 +46,6 @@ public class BluetoothService extends Service
 
     BluetoothGattCharacteristic settings = null; // 0074
     BluetoothGattCharacteristic settingsResponse = null; // 0075
-    /*
-    2: resolution
-    3: fps
-    59: auto power down
-    108: video aspect ratio
-    121: video digital lenses (wide etc.)
-    122: photo digital lenses
-    123: time lapse digital lenses
-    128: media format
-    134: anti-flicker (60/50 Hz)
-    135: hypersmooth
-    150: video horizon leveling
-    151: photo horizon leveling
-    162: max lens
-
-     */
     BluetoothGattCharacteristic query = null; // 0076
     BluetoothGattCharacteristic queryResponse = null; // 0077
 
@@ -71,6 +58,7 @@ public class BluetoothService extends Service
     public String recordingTime = "00:00";
     public boolean gpsLock = false;
 
+    public boolean firstUpdateAfterConnectionPending = true;
 
     public BluetoothService()
     {
@@ -157,6 +145,7 @@ public class BluetoothService extends Service
                 // disconnected from the GATT Server
                 connectionState = STATE_DISCONNECTED;
                 broadcastUpdate(CAMERA_DISCONNECTED);
+                firstUpdateAfterConnectionPending = true;
             }
         }
 
@@ -222,6 +211,7 @@ public class BluetoothService extends Service
         {
             if (status != BluetoothGatt.GATT_SUCCESS)
             {
+
             }
         }
 
@@ -364,6 +354,14 @@ public class BluetoothService extends Service
             }
             int len = packet[pointer+1];
             pointer += len+2;
+            if(firstUpdateAfterConnectionPending)
+            {
+                firstUpdateAfterConnectionPending = false;
+                if(recordingTime != "")
+                {
+                    broadcastUpdate(CAMERA_CONNECTED_RECORDING);
+                }
+            }
             broadcastUpdate(DATA_AVAILABLE);
         }
     }
