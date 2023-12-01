@@ -25,19 +25,17 @@ public class BluetoothService extends Service
     private BluetoothDevice goPro = null;
     private BluetoothAdapter bluetoothAdapter;
     public BluetoothGatt bluetoothGatt = null;
-    public final static String CAMERA_CONNECTED =
-            "akson.CAMERA_CONNECTED";
-
-    public final static String CAMERA_CONNECTED_RECORDING =
-            "akson.CAMERA_CONNECTED_RECORDING";
-    public final static String CAMERA_DISCONNECTED =
-            "akson.CAMERA_DISCONNECTED";
-    public final static String DATA_AVAILABLE =
-            "akson.DATA_AVAILABLE";
+    public final static String CAMERA_CONNECTED = "akson.CAMERA_CONNECTED";
+    public final static String RECORDING_STARTED = "akson.RECORDING_STARTED";
+    public final static String RECORDING_STOPPED = "akson.RECORDING_STOPPED";
+    public final static String CAMERA_DISCONNECTED = "akson.CAMERA_DISCONNECTED";
+    public final static String DATA_AVAILABLE = "akson.DATA_AVAILABLE";
+    public final static String MODE_CHANGED = "akson.MODE_CHANGED";
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTED = 2;
 
-    private int connectionState;
+    private boolean recording = false;
+    public boolean charging = false;
 
     private final Binder binder = new LocalBinder();
 
@@ -54,11 +52,11 @@ public class BluetoothService extends Service
     private int assembledPacketPointer = -1;
 
     public int batteryRemaining = 0;
-    public String sdCardRemaining = "00:00";
-    public String recordingTime = "00:00";
+    public String sdCardRemaining = "SD";
+    public String recordingTime = "";
     public boolean gpsLock = false;
 
-    public boolean firstUpdateAfterConnectionPending = true;
+    public String mode = "";
 
     public BluetoothService()
     {
@@ -94,6 +92,26 @@ public class BluetoothService extends Service
         }
     }
 
+    public void SetMode(String mode)
+    {
+        if(command == null)
+        {
+            return;
+        }
+        switch(mode)
+        {
+            case "video":
+                command.setValue(new byte[] {3,2,1,0});
+                break;
+            case "timelapse":
+                command.setValue(new byte[] {3,2,1,2});
+                break;
+            case "photo":
+                command.setValue(new byte[] {3,2,1,1});
+                break;
+        }
+        bluetoothGatt.writeCharacteristic(command);
+    }
     public void StartRecording()
     {
         if(command == null)
@@ -134,18 +152,14 @@ public class BluetoothService extends Service
         {
             if (newState == BluetoothProfile.STATE_CONNECTED)
             {
-                // successfully connected to the GATT Server
-                connectionState = STATE_CONNECTED;
-
                 // Attempts to discover services after successful connection.
                 bluetoothGatt.discoverServices();
             }
             else if (newState == BluetoothProfile.STATE_DISCONNECTED)
             {
-                // disconnected from the GATT Server
-                connectionState = STATE_DISCONNECTED;
+                recording = false;
+                mode = "";
                 broadcastUpdate(CAMERA_DISCONNECTED);
-                firstUpdateAfterConnectionPending = true;
             }
         }
 
@@ -196,10 +210,8 @@ public class BluetoothService extends Service
                 BluetoothGatt gatt,
                 BluetoothGattCharacteristic characteristic,
                 int status
-        ) {
-            if (status != BluetoothGatt.GATT_SUCCESS)
-            {
-            }
+        )
+        {
         }
 
         @Override
@@ -209,8 +221,14 @@ public class BluetoothService extends Service
                 int status
         )
         {
-            if (status != BluetoothGatt.GATT_SUCCESS)
+            if (status == BluetoothGatt.GATT_SUCCESS)
             {
+                byte[] characteristicWritten = characteristic.getValue();
+                if(characteristicWritten[1] == 0x52)
+                {
+                    query.setValue(new byte[]{7, 0x53, 2, 10, 13, 35, 68, 70});
+                    bluetoothGatt.writeCharacteristic(query);
+                }
 
             }
         }
@@ -228,8 +246,6 @@ public class BluetoothService extends Service
                 case "b5f90075-aa8d-11e3-9046-0002a5d5c51b": // settings response
                     break;
                 case "b5f90077-aa8d-11e3-9046-0002a5d5c51b": // query response
-                    /* note that this assumes only one active query - for multiple
-                       queries the notifications may be interleaved! */
                     accumulatePackets(characteristic.getValue());
                     break;
             }
@@ -252,8 +268,8 @@ public class BluetoothService extends Service
             }
             if(bluetoothGattDescriptor.getCharacteristic().getUuid().equals(UUID.fromString("b5f90077-aa8d-11e3-9046-0002a5d5c51b")))
             {
-                boolean success = query.setValue(new byte[] {5,0x53,13,35,68,70});
-                success = bluetoothGatt.writeCharacteristic(query);
+                query.setValue(new byte[] {2,0x52,92});
+                bluetoothGatt.writeCharacteristic(query);
             }
         }
     };
@@ -265,7 +281,7 @@ public class BluetoothService extends Service
         {
             assembledPacket = new byte[header];
             arraycopy(packet, 1, assembledPacket, 0, header);
-            decodePacket(assembledPacket);
+            decodeMessage(assembledPacket);
         }
         else // multi-packet message
         {
@@ -313,56 +329,104 @@ public class BluetoothService extends Service
                         return;
                     }
                     assembledPacketPointer = -1;
-                    decodePacket(assembledPacket);
+                    decodeMessage(assembledPacket);
                 }
             }
         }
     }
 
-    private void decodePacket(byte[] packet)
+    private void decodeMessage(byte[] message)
     {
-        int pointer = 0;
-        while(pointer < packet.length)
+        int messageId = message[0] & 0xFF;
+        int pointer = 2;
+        switch(messageId)
         {
-            int id = packet[pointer];
-            switch(id)
-            {
-                case 13: // recording time [s]
-                    int recTime = bytearrayToInt(packet, pointer+2, 4);
-                    if(recTime == 0)
-                    {
-                        recordingTime = "";
-                    }
-                    else if(recTime >= 3600)
-                    {
-                        recordingTime = String.format("%d:%02d:%02d", recTime / 3600, (recTime % 3600) / 60, (recTime % 60));
-                    }
-                    else
-                    {
-                        recordingTime = String.format("%d:%02d", recTime / 60, (recTime % 60));
-                    }
-                    break;
-                case 35: // remaining video time [min]
-                    int remTime = bytearrayToInt(packet, pointer+2, 4);
-                    sdCardRemaining = String.format("%d:%02d", remTime / 3600, (remTime % 3600) / 60);
-                    break;
-                case 68: // gps lock
-                    gpsLock = packet[pointer + 2] != 0;break;
-                case 70: // remaining battery %
-                    batteryRemaining = packet[pointer+2];
-                    break;
-            }
-            int len = packet[pointer+1];
-            pointer += len+2;
-            if(firstUpdateAfterConnectionPending)
-            {
-                firstUpdateAfterConnectionPending = false;
-                if(recordingTime != "")
+            case 0x52:
+            case 0x92:
+                while (pointer < message.length)
                 {
-                    broadcastUpdate(CAMERA_CONNECTED_RECORDING);
+                    int id = message[pointer];
+                    switch (id)
+                    {
+                        case 92:
+                            switch (message[pointer + 2])
+                            {
+                                case 12: //video
+                                case 15: // looping
+                                    mode = "video";
+                                    break;
+                                case 13: // timelapse video
+                                case 20: // timelapse photo
+                                case 21: // nightlapse photo
+                                case 24: // timewarp video
+                                    mode = "timelapse";
+                                    break;
+                                case 17: // photo
+                                case 18: // night
+                                case 19: // burst
+                                    mode = "photo";
+                                    break;
+                            }
+                            broadcastUpdate(MODE_CHANGED);
+                            break;
+                    }
+                    int len = message[pointer + 1];
+                    pointer += len + 2;
                 }
-            }
-            broadcastUpdate(DATA_AVAILABLE);
+                break;
+            case 0x53:
+            case 0x93:
+                while (pointer < message.length)
+                {
+                    int id = message[pointer];
+                    switch (id)
+                    {
+                        case 13: // recording time [s]
+                            int recTime = bytearrayToInt(message, pointer + 2, 4);
+                            if (recTime == 0)
+                            {
+                                recordingTime = "";
+                            }
+                            else if (recTime >= 3600)
+                            {
+                                recordingTime = String.format("%d:%02d:%02d", recTime / 3600, (recTime % 3600) / 60, (recTime % 60));
+                            }
+                            else
+                            {
+                                recordingTime = String.format("%d:%02d", recTime / 60, (recTime % 60));
+                            }
+                            break;
+                        case 35: // remaining video time [min]
+                            int remTime = bytearrayToInt(message, pointer + 2, 4);
+                            sdCardRemaining = String.format("%d:%02d", remTime / 3600, (remTime % 3600) / 60);
+                            break;
+                        case 68: // gps lock
+                            gpsLock = message[pointer + 2] != 0;
+                            break;
+                        case 70: // remaining battery %
+                            batteryRemaining = message[pointer + 2];
+                            break;
+                        case 2: // battery rough level, 4=charging
+                            charging = message[pointer + 2] == 4;
+                            break;
+                        case 10: // encoding active
+                            if(message[pointer+2] == 0 && recording)
+                            {
+                                recording = false;
+                                broadcastUpdate(RECORDING_STOPPED);
+                            }
+                            else if(message[pointer+2] == 1 && !recording)
+                            {
+                                recording = true;
+                                broadcastUpdate(RECORDING_STARTED);
+                            }
+                            break;
+                    }
+                    int len = message[pointer + 1];
+                    pointer += len + 2;
+                }
+                broadcastUpdate(DATA_AVAILABLE);
+                break;
         }
     }
 

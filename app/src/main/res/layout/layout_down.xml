@@ -24,20 +24,20 @@
 
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/backgroundShading_D"
+                android:src="@drawable/background_styling_down"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/background_styling_down" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/button"
                 android:layout_width="0dp"
                 android:layout_height="80dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/button_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="92dp"
                 android:layout_marginEnd="8dp"
-                android:text="rec time"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#FF0000"
@@ -63,11 +62,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="96dp"
-                android:text="GPS"
+                android:text="@string/GPS"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="#ff0000"
                 android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -75,7 +75,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="BAT %"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="#ffffff"
@@ -88,7 +87,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="SD card"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#ffffff"

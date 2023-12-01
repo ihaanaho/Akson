@@ -15,8 +15,8 @@
         <!-- this is the expanded layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/background"
-            android:layout_width="160dp"
-            android:layout_height="106dp"
+            android:layout_width="106dp"
+            android:layout_height="180dp"
             android:background="#00000000"
             android:orientation="horizontal"
             android:padding="0dp"
@@ -24,8 +24,8 @@
 
 
             <ImageView
-                android:id="@+id/backgroundShading_R"
-                android:src="@drawable/background_styling_right"
+                android:id="@+id/backgroundShading_U"
+                android:src="@drawable/background_styling_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -35,21 +35,21 @@
 
             <ImageView
                 android:id="@+id/button"
-                android:layout_width="80dp"
+                android:layout_width="0dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/button_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5"
                 tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/recordingTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#FF0000"
@@ -61,40 +61,39 @@
                 android:id="@+id/gpsLock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="64dp"
                 android:text="@string/GPS"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="#ff0000"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundShading_R" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/batteryRemaining"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/backgroundShading_R" />
+                app:layout_constraintTop_toBottomOf="@+id/recordingTime" />
 
             <TextView
                 android:id="@+id/sdCardRemaining"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/batteryRemaining" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

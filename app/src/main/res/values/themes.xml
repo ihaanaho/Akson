@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.Akson" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Akson" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:background">#505050</item>
+        <item name="android:textColor">#00DF00</item>
+    </style>
 </resources>

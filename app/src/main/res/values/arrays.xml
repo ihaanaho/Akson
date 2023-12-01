@@ -1,12 +1,13 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="orientation_entries">
+        <item>@string/orientation_up</item>
+        <item>@string/orientation_left</item>
+        <item>@string/orientation_right</item>
+        <item>@string/orientation_down</item>
     </string-array>
-
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="camera_mode_entries">
+        <item>@string/camera_mode_video</item>
+        <item>@string/camera_mode_timelapse</item>
+        <item>@string/camera_mode_photo</item>
     </string-array>
 </resources>

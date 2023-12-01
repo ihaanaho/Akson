@@ -1,18 +1,21 @@
 package himmelihommelit.akson;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
-public class PermissionsActivity extends AppCompatActivity implements View.OnClickListener
+public class PermissionsActivity extends Activity implements View.OnClickListener
 {
         private boolean overlayPermissionGranted = false;
         private boolean bluetoothPermissionGranted = false;
@@ -61,7 +64,7 @@ public class PermissionsActivity extends AppCompatActivity implements View.OnCli
         }
 
         @Override
-        public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults)
         {
                 if (grantResults.length > 0 && permissions.length==grantResults.length && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
@@ -73,15 +76,16 @@ public class PermissionsActivity extends AppCompatActivity implements View.OnCli
                         intent.addCategory(Intent.CATEGORY_DEFAULT);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        String toastText = "Salli \"Lähellä olevat laitteet\" ja paina takaisin-näppäintä, kunnes pääset kotinäyttöön.";
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.toast_nearby_devices), Toast.LENGTH_LONG).show();
                 }
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         private void startService()
         {
-                startService(new Intent(PermissionsActivity.this, ButtonService.class));
+                Intent intent = new Intent(PermissionsActivity.this, ButtonService.class);
+                intent.setAction("START");
+                startService(intent);
                 finish();
         }
 
@@ -96,8 +100,7 @@ public class PermissionsActivity extends AppCompatActivity implements View.OnCli
                 {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                         startActivity(intent);
-                        String toastText = "Etsi Äksön, laita päälle ja paina takaisin-näppäintä";
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, getString(R.string.toast_overlay), Toast.LENGTH_LONG).show();
                 }
         }
 }

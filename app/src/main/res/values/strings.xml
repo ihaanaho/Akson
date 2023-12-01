@@ -1,19 +1,37 @@
 <resources>
     <string name="app_name">Äksön</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="permissions_intro">This application does not collect user\'s data.
+        It requires the following permissions:\n
+        - Nearby devices: BLE communication with the camera\n
+        -  Display over other apps: a floating widget needs to be displayed over all other apps.\n\n
+        The camera has to be paired outside this app and the device BT name must start with \"GoPro\".</string>
+    <string name="grant_permissions_button">grant permissions</string>
+    <string name="toast_nearby_devices">Allow \"Nearby devices\" and repeatedly click the back button until you get back to home screen.</string>
+    <string name="toast_overlay">Find Äksön, switch it on and press the back button.</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="title_settings">settings</string>
+    <string name="settings_quit">quit Äksön</string>
+    <string name="settings_label_battery_warning">battery warning text\n(mark number and percentage with #%)</string>
+    <string name="settings_label_vertical_orientation">data location on a vertical screen</string>
+    <string name="settings_label_horizontal_orientation">data location on a horizontal screen</string>
+    <string name="settings_label_camera_mode">camera mode</string>
+    <string name="settings_label_lock_camera_mode">lock</string>
+    <string name="settings_label_sound_start">record start sound</string>
+    <string name="settings_label_sound_end">record end sound</string>
+    <string name="settings_label_lock_widget">lock the current position of the widget</string>
 
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="sound_title_default">(none)</string>
+    <string name="battery_warning_default">#% of camera battery remaining</string>
+
+    <string name="orientation_up">above</string>
+    <string name="orientation_left">left</string>
+    <string name="orientation_right">right</string>
+    <string name="orientation_down">below</string>
+
+    <string name="camera_mode_video" translatable="false">video</string>
+    <string name="camera_mode_timelapse" translatable="false">timelapse</string>
+    <string name="camera_mode_photo" translatable="false">photo</string>
+    <string name="GPS" translatable="false">GPS</string>
+
 </resources>

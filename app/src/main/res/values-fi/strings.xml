@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Äksön</string>
+
+    <string name="permissions_intro">Tämä sovellus ei seuraa tai tallenna käyttäjän dataa.
+        Se tarvitsee seuraavat luvat:\n
+        - Lähellä olevat laitteet: BLE-kommunikaatio kameran kanssa\n
+        - Näytä päällimmäisenä: kelluvan vimpaimen pitää näkyä kaikkien sovellusten päällä.\n\n
+        Kamera pitää parittaa tämän sovelluksen ulkopuolella ja kameran BT-nimen pitää alkaa \"GoPro\":lla.</string>
+    <string name="grant_permissions_button">myönnä oikeudet</string>
+    <string name="toast_nearby_devices">Salli \"Lähellä olevat laitteet\" ja paina toistuvasti takaisin-näppäintä, kunnes pääset kotinäyttöön.</string>
+    <string name="toast_overlay">Etsi Äksön, laita päälle ja paina takaisin-näppäintä</string>
+
+    <string name="title_settings">asetukset</string>
+    <string name="settings_quit">lopeta Äksön</string>
+    <string name="settings_label_battery_warning">akkuvaroitusteksti\n(merkitse lukema ja prosentti näin: #%)</string>
+    <string name="settings_label_vertical_orientation">tietojen sijainti pystyruudulla</string>
+    <string name="settings_label_horizontal_orientation">tietojen sijainti vaakaruudulla</string>
+    <string name="settings_label_camera_mode">kameran tila</string>
+    <string name="settings_label_lock_camera_mode">lukitse</string>
+    <string name="settings_label_sound_start">tallennuksen aloitusääni</string>
+    <string name="settings_label_sound_end">tallennuksen lopetusääni</string>
+    <string name="battery_warning_default">kameran akkua #% jäljellä</string>
+    <string name="settings_label_lock_widget">lukitse vimpain nykyiseen kohtaan</string>
+    <string name="sound_title_default">(oletus)</string>
+    <string name="orientation_up">yllä</string>
+    <string name="orientation_down">alla</string>
+    <string name="orientation_left">vasemmalla</string>
+    <string name="orientation_right">oikealla</string>
+</resources>
